@@ -4,8 +4,8 @@ import { UsersService } from './users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { Match } from './matches/entities/match.entity';
-import { Result } from './results/entities/result.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -19,13 +19,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [User, Match, Result],
-        synchronize: false, // set to false for production
+        entities: [User, Match],
+        synchronize: true, // set to false for production
       }),
       inject: [ConfigService],
     }),
   ],
   controllers: [],
-  providers: [AuthService, UsersService],
+  providers: [AuthService, UsersService, JwtService],
 })
 export class AppModule {}

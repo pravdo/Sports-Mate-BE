@@ -1,11 +1,9 @@
-import { Result } from 'src/results/entities/result.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  OneToOne,
   CreateDateColumn,
 } from 'typeorm';
 
@@ -20,6 +18,9 @@ export class Match {
   @ManyToOne(() => User, (user) => user.matchesAsPlayer2)
   player2: User;
 
+  @ManyToOne(() => User, (user) => user)
+  winner: User;
+
   @Column()
   sport: string;
 
@@ -32,9 +33,6 @@ export class Match {
     default: 'PENDING',
   })
   status: string;
-
-  @OneToOne(() => Result, (result) => result.match, { lazy: true })
-  result: Result;
 
   @CreateDateColumn()
   createdAt: Date;
