@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth/auth.service';
 import { UsersService } from './users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { Match } from './matches/entities/match.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,8 +23,9 @@ import { JwtService } from '@nestjs/jwt';
       }),
       inject: [ConfigService],
     }),
+    AuthModule,
   ],
   controllers: [],
-  providers: [AuthService, UsersService, JwtService],
+  providers: [UsersService],
 })
 export class AppModule {}
