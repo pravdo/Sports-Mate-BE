@@ -27,6 +27,11 @@ export class UsersService {
     return user ?? undefined;
   }
 
+  async findByEmail(email: string): Promise<User | undefined> {
+    const user = await this.usersRepository.findOne({ where: { email } });
+    return user ?? undefined;
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     await this.usersRepository.update(id, updateUserDto);
     const updatedUser = await this.findById(id);
