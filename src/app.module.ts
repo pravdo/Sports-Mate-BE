@@ -5,6 +5,8 @@ import { Match } from './matches/entities/match.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ActivityLogModule } from './interceptors/activity-log/activity-log.module';
+import { ActivityLog } from './interceptors/activity-log/entities/activity-log.entity';
 
 @Module({
   imports: [
@@ -18,13 +20,14 @@ import { UsersModule } from './users/users.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [User, Match],
+        entities: [User, Match, ActivityLog],
         synchronize: true, // set to false for production
       }),
       inject: [ConfigService],
     }),
     AuthModule,
     UsersModule,
+    ActivityLogModule,
   ],
   controllers: [],
   providers: [],
