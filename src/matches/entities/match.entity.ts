@@ -1,3 +1,4 @@
+import { City } from 'src/cities/entities/city.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Entity,
@@ -23,6 +24,9 @@ export class Match {
 
   @Column()
   sport: string;
+
+  @ManyToOne(() => City, (city) => city.matches) // Add this relation
+  city: City;
 
   @Column({ type: 'timestamp' })
   scheduledTime: Date;

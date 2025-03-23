@@ -7,6 +7,9 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ActivityLogModule } from './interceptors/activity-log/activity-log.module';
 import { ActivityLog } from './interceptors/activity-log/entities/activity-log.entity';
+import { City } from './cities/entities/city.entity';
+import { CitiesModule } from './cities/cities.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -20,13 +23,15 @@ import { ActivityLog } from './interceptors/activity-log/entities/activity-log.e
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [User, Match, ActivityLog],
+        entities: [User, Match, City, ActivityLog],
         synchronize: true, // set to false for production
       }),
       inject: [ConfigService],
     }),
     AuthModule,
     UsersModule,
+    CitiesModule,
+    SeedModule,
     ActivityLogModule,
   ],
   controllers: [],
