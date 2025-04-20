@@ -11,7 +11,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from '../auth/jwt.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt.guard';
 import { JwtPayload } from 'src/auth/interfaces/jwt-payload.interface';
 
 interface RequestWithUser extends Request {
