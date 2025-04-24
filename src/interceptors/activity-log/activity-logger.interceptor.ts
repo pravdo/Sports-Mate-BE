@@ -27,14 +27,13 @@ export class ActivityLoggerInterceptor implements NestInterceptor {
     const { method, url, body, user } = request;
     const now = Date.now();
 
-    const createLogData = (response?: any, error?: any): ActivityLogData => ({
+    const createLogData = (response?: any, error?: Error): ActivityLogData => ({
       method,
       url,
       userId: user?.id,
       userEmail: user?.email,
       requestBody: body,
       response,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       error: error?.message,
       responseTime: Date.now() - now,
     });
