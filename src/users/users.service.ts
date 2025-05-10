@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -46,5 +46,15 @@ export class UsersService {
 
   async delete(id: string): Promise<void> {
     await this.usersRepository.delete(id);
+  }
+
+  async updateProfilePicture(id: string, filename: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    user.profilePicture = filename;
+    return this.usersRepository.save(user);
   }
 }

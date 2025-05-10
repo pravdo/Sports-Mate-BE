@@ -7,12 +7,21 @@ import {
   Param,
   UseGuards,
   Request,
+  UseInterceptors,
+  ParseUUIDPipe,
+  UploadedFile,
+  ParseFilePipeBuilder,
+  HttpStatus,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt.guard';
 import { JwtPayload } from 'src/auth/interfaces/jwt-payload.interface';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 
 interface RequestWithUser extends Request {
   user: JwtPayload;
@@ -47,5 +56,47 @@ export class UsersController {
   @Get('profile')
   getProfile(@Request() req: RequestWithUser) {
     return this.usersService.findById(req.user.userId);
+  }
+
+  @Post(':id/upload-profile-picture')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads/profile-pictures',
+        filename: (_req, file, cb) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          const filename = `${file.fieldname}-${uniqueSuffix}${ext}`;
+          cb(null, filename);
+        },
+      }),
+    }),
+  )
+  async uploadProfilePicture(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({ fileType: 'image/jpeg|image/png|image/jpg' })
+        .addMaxSizeValidator({ maxSize: 5 * 1024 * 1024 }) // 5MB
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.usersService.updateProfilePicture(id, file.filename);
   }
 }
