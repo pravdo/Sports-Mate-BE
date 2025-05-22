@@ -6,6 +6,8 @@ import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './auth.controller';
 import googleOauthConfig from './config/google-oauth.config';
 import { GoogleStrategy } from './strategy/google.stategy';
+import { LoginAttemptService } from './services/login-attempt.service';
+
 @Module({
   imports: [
     UsersModule,
@@ -20,7 +22,7 @@ import { GoogleStrategy } from './strategy/google.stategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtService, GoogleStrategy],
+  providers: [AuthService, JwtService, GoogleStrategy, LoginAttemptService],
   exports: [AuthService],
 })
 export class AuthModule {}
