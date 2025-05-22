@@ -12,6 +12,7 @@ import {
   UploadedFile,
   ParseFilePipeBuilder,
   HttpStatus,
+  Delete,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
@@ -50,6 +51,24 @@ export class UsersController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.usersService.delete(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/restore')
+  restore(@Param('id') id: string) {
+    return this.usersService.restore(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('deleted/all')
+  findDeleted() {
+    return this.usersService.findDeleted();
   }
 
   @UseGuards(JwtAuthGuard)

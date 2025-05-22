@@ -4,6 +4,7 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Not, IsNull } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -45,7 +46,29 @@ export class UsersService {
   }
 
   async delete(id: string): Promise<void> {
-    await this.usersRepository.delete(id);
+    const user = await this.findById(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    await this.usersRepository.softRemove(user);
+  }
+
+  async restore(id: string): Promise<User> {
+    await this.usersRepository.restore(id);
+    const restoredUser = await this.findById(id);
+    if (!restoredUser) {
+      throw new NotFoundException('User not found after restore');
+    }
+    return restoredUser;
+  }
+
+  async findDeleted(): Promise<User[]> {
+    return this.usersRepository.find({
+      withDeleted: true,
+      where: {
+        deletedAt: Not(IsNull()),
+      },
+    });
   }
 
   async updateProfilePicture(id: string, filename: string): Promise<User> {

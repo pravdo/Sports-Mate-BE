@@ -1,21 +1,11 @@
 import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
 import { Match } from '../../matches/entities/match.entity';
-import {
-  BeforeInsert,
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
+import { BaseEntity } from '../../common/entities/base.entity';
 
 @Entity('users')
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class User extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
@@ -47,12 +37,6 @@ export class User {
 
   @OneToMany(() => Match, (match) => match.player2)
   matchesAsPlayer2: Match[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 
   @Column({ nullable: true })
   profilePicture: string;
