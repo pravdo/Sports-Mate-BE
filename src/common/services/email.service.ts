@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
@@ -34,7 +33,10 @@ export class EmailService {
         html,
       };
 
-      const info = await this.transporter.sendMail(mailOptions);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const info: nodemailer.SentMessageInfo =
+        await this.transporter.sendMail(mailOptions);
+
       this.logger.debug(`Email sent successfully: ${info.messageId}`);
       return info;
     } catch (error) {

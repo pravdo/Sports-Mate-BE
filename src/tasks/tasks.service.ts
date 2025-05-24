@@ -8,12 +8,11 @@ export class TasksService {
 
   constructor(private readonly emailService: EmailService) {}
 
-  // This cron job runs every day at midnight
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  // Adjust the time to run the job as per need
+  @Cron(CronExpression.EVERY_YEAR)
   async handleScheduledEmails() {
     this.logger.debug('Running scheduled email task...');
     try {
-      // Example: Send a daily digest email
       const emailContent = `
         <h1>Daily Sports Update</h1>
         <p>Here's your daily sports update:</p>
@@ -24,7 +23,6 @@ export class TasksService {
         </ul>
       `;
 
-      // TODO: Replace with actual recipient email
       await this.emailService.sendEmail(
         'pravdo00@gmail.com',
         'Daily Sports Update',

@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Controller, Post, Body } from '@nestjs/common';
 import { EmailService } from './email.service';
+import { SentMessageInfo } from 'nodemailer';
 
 @Controller('email')
 export class EmailController {
@@ -10,7 +11,7 @@ export class EmailController {
   @Post('test')
   async testEmail(@Body() body: { to: string }) {
     try {
-      const result = await this.emailService.sendEmail(
+      const result: SentMessageInfo = await this.emailService.sendEmail(
         body.to,
         'Test Email from Sports Mate',
         `
