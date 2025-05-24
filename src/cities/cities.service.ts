@@ -40,17 +40,17 @@ export class CitiesService {
   }
 
   async createMany(cities: CreateCityDto[]): Promise<City[]> {
-    const createdCities: City[] = [];
+    // const createdCities: City[] = [];
+    return this.citiesRepository.save(cities);
+    // for (const cityData of cities) {
+    //   try {
+    //     const city = await this.create(cityData);
+    //     createdCities.push(city);
+    //   } catch (error) {
+    //     console.error(`Failed to create city ${cityData.name}:`, error);
+    //   }
+    // }
 
-    for (const cityData of cities) {
-      try {
-        const city = await this.create(cityData);
-        createdCities.push(city);
-      } catch (error) {
-        console.error(`Failed to create city ${cityData.name}:`, error);
-      }
-    }
-
-    return createdCities;
+    // return createdCities;
   }
 }

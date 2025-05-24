@@ -10,6 +10,7 @@ import { ActivityLog } from './interceptors/activity-log/entities/activity-log.e
 import { City } from './cities/entities/city.entity';
 import { CitiesModule } from './cities/cities.module';
 import { SeedModule } from './seed/seed.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { SeedModule } from './seed/seed.module';
     CitiesModule,
     SeedModule,
     ActivityLogModule,
+    TasksModule,
   ],
   controllers: [],
   providers: [],
