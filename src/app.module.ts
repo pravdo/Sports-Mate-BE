@@ -11,10 +11,12 @@ import { City } from './cities/entities/city.entity';
 import { CitiesModule } from './cities/cities.module';
 import { SeedModule } from './seed/seed.module';
 import { TasksModule } from './tasks/tasks.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    EventEmitterModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({

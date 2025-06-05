@@ -5,11 +5,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, IsNull } from 'typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ForgotPasswordEvent } from 'src/events/forgot-password.event';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -79,5 +83,24 @@ export class UsersService {
 
     user.profilePicture = filename;
     return this.usersRepository.save(user);
+  }
+  async sendForgotPasswordEmail(email: string) {
+    const user = await this.usersRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpiresAt = new Date();
+    resetTokenExpiresAt.setHours(resetTokenExpiresAt.getHours() + 1);
+
+    user.resetToken = resetToken;
+    user.resetTokenExpiresAt = resetTokenExpiresAt;
+    await this.usersRepository.save(user);
+
+    this.eventEmitter.emit(
+      'forgot-password',
+      new ForgotPasswordEvent(email, resetToken),
+    );
   }
 }

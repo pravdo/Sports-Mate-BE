@@ -40,4 +40,10 @@ export class User extends BaseEntity {
 
   @Column({ nullable: true })
   profilePicture: string;
+
+  @Column({ nullable: true })
+  resetToken?: string;
+
+  @Column({ nullable: true, type: 'timestamp' })
+  resetTokenExpiresAt?: Date;
 }
