@@ -12,11 +12,13 @@ import { CitiesModule } from './cities/cities.module';
 import { SeedModule } from './seed/seed.module';
 import { TasksModule } from './tasks/tasks.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     EventEmitterModule.forRoot(),
+    CacheModule.register(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -39,6 +41,6 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     TasksModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [{ provide: 'APP_INTERCEPTOR', useClass: CacheInterceptor }],
 })
 export class AppModule {}
