@@ -19,13 +19,20 @@ export class Match {
   @ManyToOne(() => User, (user) => user.matchesAsPlayer2)
   player2: User;
 
-  @ManyToOne(() => User, (user) => user)
+  @Column({ type: 'int', default: 0 })
+  player1Score?: number;
+
+  @Column({ type: 'int', default: 0 })
+  player2Score?: number;
+
+  @ManyToOne(() => User, (user) => user, { nullable: true })
+  // Nullable winner in case match is not completed or has no winner
   winner: User;
 
   @Column()
   sport: string;
 
-  @ManyToOne(() => City, (city) => city.matches) // Add this relation
+  @ManyToOne(() => City, (city) => city.matches)
   city: City;
 
   @Column({ type: 'timestamp' })
